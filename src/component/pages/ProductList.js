@@ -4,7 +4,6 @@ import { Button, Card, Col, Container, Row } from "react-bootstrap";
 import { category } from "../../store/Data";
 import Filters from "./Filters";
 import { useDispatch, useSelector } from "react-redux";
-import axios from "axios";
 import SingleProduct from "./SingleProduct";
 import { setDataStore } from "../../reducers/filteresreducer";
 
@@ -31,7 +30,7 @@ const App = () => {
         offset: 0,
       })
     );
-  }, [ price_min, price_max, categoryId]);
+  }, [price_min, price_max, categoryId]);
   const makeUrlString = useCallback(() => {
     let str = "";
     let urlObj = {
@@ -49,18 +48,17 @@ const App = () => {
   }, [filterData]);
   // -------------Product list api-----------------
   const fetchProducts = async () => {
-    let urlString = await makeUrlString();
-    axios
-      .get(`https://api.escuelajs.co/api/v1/products?${urlString}`)
-      .then((response) => {
-        if (response.status === 200) {
-          setLoading(false);
-          setProducts(response.data);
-        }
-      })
-      .catch((error) => {
-        console.error("Error fetching products:", error);
-      });
+    try {
+      let urlString = makeUrlString();
+      const response = await fetch(`https://api.escuelajs.co/api/v1/products?${urlString}`)
+      const data = await response.json()
+      setLoading(false);
+      setProducts(data);
+    } catch (error) {
+      console.error('Error fetching products:', error);
+
+    }
+
   };
   const handlePrevPage = () => {
     if (offset >= limit) {
@@ -71,14 +69,14 @@ const App = () => {
       );
     }
   };
-// const images = [
-//   "[\"https://media.gcflearnfree.org/ctassets/topics/246/share_flower_fullsize.jpg\"]",
-//   // "[\"https://media.gcflearnfree.org/ctassets/topics/246/share_flower1_fullsize.jpg\"]"
-// ]
-function opi(params) {
-  const om = JSON.parse(params)
-return om
-}
+  // const images = [
+  //   "[\"https://media.gcflearnfree.org/ctassets/topics/246/share_flower_fullsize.jpg\"]",
+  //   // "[\"https://media.gcflearnfree.org/ctassets/topics/246/share_flower1_fullsize.jpg\"]"
+  // ]
+  function opi(params) {
+    const om = JSON.parse(params)
+    return om
+  }
 
   const handleNextPage = () => {
     dispatch(
@@ -101,7 +99,7 @@ return om
             {loading ? (
               <p>Loading...</p>
             ) : (
-              <SingleProduct products={products} opi={opi}/> //  -------------Product card-----------------
+              <SingleProduct products={products} opi={opi} /> //  -------------Product card-----------------
             )}
           </div>
           {/* //  -------------pagination -----------------  */}

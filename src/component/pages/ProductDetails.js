@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { Col, Row } from "react-bootstrap";
-import axios from "axios";
 import { Link, useParams } from "react-router-dom";
 
 function ProductDetails() {
@@ -14,9 +13,7 @@ function ProductDetails() {
   // -------------------productDetail------------------
   const productDetail = async () => {
     try {
-      const response = await fetch(
-        `https://api.escuelajs.co/api/v1/products/${params.id}`
-      );
+      const response = await fetch( `https://api.escuelajs.co/api/v1/products/${params.id}`);
       const data = await response.json();
       setProductsdetails(data);
       setLoading(false);
