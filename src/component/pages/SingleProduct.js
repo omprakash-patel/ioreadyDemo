@@ -9,7 +9,6 @@ function SingleProduct(props) {
   console.log();
   const addtocart = (item) => {
     const isCart = cartList.find(i=>i.id===item.id)
-    console.log('isCart',isCart);
     if (isCart) {
       alert("product alredy in cart")
     } else {

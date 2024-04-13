@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { Col, Row } from "react-bootstrap";
 import axios from "axios";
 import { Link, useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { setCartstore } from "../../reducers/cartreducer";
 
 function ProductDetails() {
   const params = useParams();
@@ -24,7 +26,22 @@ function ProductDetails() {
       console.error("Error fetching products:", error);
     }
   };
-  
+  const dispatch = useDispatch()
+  const {cartList} = useSelector((state) => state?.persistedReducer?.cartData);
+  console.log('cartList',cartList);
+  console.log();
+  const addtocart = (item) => {
+    const isCart = cartList.find(i=>i.id===item.id)
+    if (isCart) {
+      alert("product alredy in cart")
+    } else {
+    dispatch( setCartstore(
+      {
+        ...cartList,
+      cartList: [...cartList,item],
+    }))
+   }
+  }
   return (
     <>
       <div>
@@ -75,13 +92,9 @@ function ProductDetails() {
                       </div>
                       <p>{productsdetails.description}</p>
                       <hr />
-                      <Link to="#" class="btn me-2 btn-warning shadow-0">
+                      <Link to="#" class="btn me-2 btn-warning shadow-0" onClick={()=>addtocart(productsdetails )}>
                         {" "}
                         Buy now{" "}
-                      </Link>
-                      <Link to="#" class="btn me-2 btn-primary shadow-0">
-                        {" "}
-                        <i class="me-1 fa fa-shopping-basket"></i> Add to cart{" "}
                       </Link>
                     </div>
                   </main>
